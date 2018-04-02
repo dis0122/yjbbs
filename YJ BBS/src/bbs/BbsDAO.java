@@ -82,23 +82,23 @@ public class BbsDAO {
 		return -1; // 데이터베이스오류
 	}
 
-	public int write(String bbsTitle, String userID, String bbsContent) {
+	public int write(String bbsTitle, String userID, String bbsContent, int number) {
 		String SQL = "INSERT INTO BBS VALUES(?,?,?,?,?,?,?)";
 		try {
-			PreparedStatement pstmt = conn.prepareStatement(SQL); // 실행준비단계
+			PreparedStatement pstmt = conn.prepareStatement(SQL); // �떎�뻾以�鍮꾨떒怨�
 			pstmt.setInt(1, getNext());
 			pstmt.setString(2, bbsTitle);
 			pstmt.setString(3, userID);
 			pstmt.setString(4, getDate());
 			pstmt.setString(5, bbsContent);
 			pstmt.setInt(6, 1);
-			pstmt.setInt(7, 0);
+			pstmt.setInt(7, number);
 			return pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return -1; // 데이터베이스오류
+		return -1; // �뜲�씠�꽣踰좎씠�뒪�삤瑜�
 	}
 
 	public ArrayList<Bbs> getList(int pageNumber) {
@@ -148,12 +148,12 @@ public class BbsDAO {
 		return false; // 데이터베이스오류
 	}
 
-	public Bbs getBbs(int bbsID) // 글을 불러오는 함수
+	public Bbs getBbs(int bbsID) // 湲��쓣 遺덈윭�삤�뒗 �븿�닔
 	{
 		String SQL = "SELECT * FROM BBS WHERE bbsID = ?";
 
 		try {
-			PreparedStatement pstmt = conn.prepareStatement(SQL); // 실행준비단계
+			PreparedStatement pstmt = conn.prepareStatement(SQL); // �떎�뻾以�鍮꾨떒怨�
 			pstmt.setInt(1, bbsID);
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
@@ -164,6 +164,7 @@ public class BbsDAO {
 				bbs.setBbsDate(rs.getString(4));
 				bbs.setBbsContent(rs.getString(5));
 				bbs.setBbsAvailable(rs.getInt(6));
+				bbs.setBbsAnonymous(rs.getInt(7));
 				return bbs;
 
 			}
@@ -172,7 +173,7 @@ public class BbsDAO {
 			e.printStackTrace();
 		}
 
-		return null; // 데이터베이스오류
+		return null; // �뜲�씠�꽣踰좎씠�뒪�삤瑜�
 	}
 
 	public int update(int bbsID, String bbsTitle, String bbsContent) {
